@@ -26,12 +26,12 @@
               <span class="quantity">{{ product.quantity }}</span>
               <button @click="product.quantity++">+</button>
             </span>
-            <span class="amount">{{
+            <span class="amount">  {{
               (product.price * product.quantity).toFixed(2)
-            }}</span>
+            }} MZN</span>
           </div>
         </div>
-        <div class="grand-total">Grand Total: US$ 22.30</div>
+        <div class="grand-total">Grand Total:  {{ orderTotal() }} MZN</div>
       </template>
       <template v-else><div>No Products in Bag Yet</div></template>
     </div>
@@ -44,7 +44,15 @@ import { mapState } from "vuex";
 export default {
   name: "ShoppingBasket",
 
-  methods: {},
+  methods: {
+    orderTotal() {
+      var total = 0;
+      this.productsInBag.forEach((item) => {
+        total += item.price * item.quantity;
+      });
+      return total.toFixed(2);
+    },
+  },
 
   computed: mapState(["products", "productsInBag"]),
 };

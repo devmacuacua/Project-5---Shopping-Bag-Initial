@@ -8,26 +8,43 @@ export default createStore({
   },
   mutations: {
     loadProducts(state, products) {
-      console.log("----mutations---", products);
       state.products = products;
+    },
+    loadBag(state, products) {
+      state.productsInBag = products;
     },
     addToBag(state, product) {
       state.productsInBag.push(product);
+      localStorage.setItem(
+        "productsInBag",
+        JSON.stringify(this.state.productsInBag)
+      );
     },
     removeFromBag(state, productId) {
       var updatedBag = state.productsInBag.filter(
         (item) => item.id != productId
       );
       state.productsInBag = updatedBag;
+      localStorage.setItem(
+        "productsInBag",
+        JSON.stringify(this.state.productsInBag)
+      );
     },
   },
   actions: {
     loadProducts({ commit }) {
-      axios.get("https://fakestoreapi.com/products").then((Response) => {
-        commit("loadProducts", Response.data);
+      axios.get("https://fakestoreapi.com/products").then((response) => {
+        commit("loadProducts", response.data);
       });
     },
-
+    loadBag({ commit }) {
+      if (localStorage.getItem("productsInBag")) {
+        commit(
+          "loadBag",
+          JSON.stringify(localStorage.getItem("productsInBag"))
+        );
+      }
+    },
     addToBag({ commit }, product) {
       commit("addToBag", product);
     },
